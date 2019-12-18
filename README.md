@@ -14,3 +14,9 @@ The server is routed using express. Nodemon is used to run the server in develop
 
 ## Build
 React files and components are located in the `/client` directory. These files are then bundled using webpack. Run `build:production` to build the public webpack file. Run `build:dev` to build the dev file.
+
+## CRUD API
+- Create/POST: '/api/reservations/:hostId'
+- Read/GET: '/api/reservations/:hostId'
+- Update/PUT: '/api/reservations/:hostId'
+- Delete/DELETE: '/api/reservations/:hostId'
