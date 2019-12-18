@@ -8,7 +8,7 @@
     "build:dev": "webpack -w -d",
     "db:setup": "node server/seed/seed.js",
     "start": "node server/router.js",
-    "server": "nodemon server/router.js",
+    "server": "nodemon --inspect server/router.js",
     "server:inspect": "nodemon --inspect server/router.js",
     "pretest": "eslint .",
     "build:production": "webpack --mode=production"
@@ -35,6 +35,7 @@
     "@babel/preset-react": "^7.7.4",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "cli-progress": "^3.4.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^6.7.2",
@@ -48,6 +49,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
