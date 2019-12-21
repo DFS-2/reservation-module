@@ -6,7 +6,7 @@ const loftSynonyms = ['apartment', 'hostel', 'hotel', 'inn', 'lodge', 'motel', '
 
 const generateOneUser = (home_id) => {
   return {
-    home_id: home_id,
+    _id: home_id,
     title: `${faker.commerce.productAdjective()} ${loftSynonyms[Math.floor(Math.random() * loftSynonyms.length)]} ${faker.address.city()}`,
     priceperadult: `$${Math.floor(Math.random() * 400)}`,
     priceperchild: `$${Math.floor(Math.random() * 400)}`,

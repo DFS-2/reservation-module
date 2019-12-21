@@ -4,6 +4,10 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'reservations';
 const homeCollection = 'home';
 const userCollection = 'user';
+const userBatchSize = 1500;
+const userTotalSize = 15000000;
+const homeBatchSize = 1000;
+const homeTotalSize = 10000000;
 
 const userCollectionSchema = {
   validator: { $jsonSchema: {
@@ -84,34 +88,51 @@ const homeCollectionSchema = {
 };
 
 // =========== database initialization ===========
-MongoClient.connect(url, (err, client) => {
-  if (err) { throw err } 
-  const db = client.db(dbName);
-  db.createCollection(userCollection, (err, res) => {
-    if (err) { throw err }
-    console.log(`collection ${userCollection} created!`);
-    db.createCollection(homeCollection, (err, res) => {
-      if (err) { throw err }
-      console.log(`collection ${homeCollection} created!`);
-      process.exit(0);
-    });
-  });
-});
+// MongoClient.connect(url, (err, client) => {
+//   if (err) { throw err } 
+//   const db = client.db(dbName);
+//   db.createCollection(userCollection, (err, res) => {
+//     if (err) { throw err }
+//     console.log(`collection ${userCollection} created!`);
+//     db.createCollection(homeCollection, (err, res) => {
+//       if (err) { throw err }
+//       console.log(`collection ${homeCollection} created!`);
+//     });
+//   });
+// });
 
-module.exports.insertManyUsers = (arrayOfCollections, callback) => {
-  MongoClient.connect(url, (err, client) => {
-    if (err) { throw err }
-    const db = client.db(dbName);
-    const collection = db.collection('user');
-    collection.insertMany(arrayOfCollections, callback);
+module.exports.insertManyUsers = (arrayOfCollections) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, (err, client) => {
+      if (err) { 
+        reject(err);
+      } else {
+        const db = client.db(dbName);
+        const collection = db.collection('user');
+        resolve(collection.insertMany(arrayOfCollections).then(() => {
+          client.close();
+        }).catch((err) => {
+          console.log('insertmanyuser err, ', err);
+        }));
+      }
+    });
   });
 };
 
-module.exports.insertManyHomes = (arrayOfCollections, callback) => {
-  MongoClient.connect(url, (err, client) => {
-    if (err) { throw err }
-    const db = client.db(dbName);
-    const collection = db.collection('home');
-    collection.insertMany(arrayOfCollections, callback);
+module.exports.insertManyHomes = (arrayOfCollections) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, (err, client) => {
+      if (err) { 
+        reject(err);
+      } else {
+        const db = client.db(dbName);
+        const collection = db.collection('home');
+        resolve(collection.insertMany(arrayOfCollections).then(() => {
+          client.close();
+        }).catch((err) => {
+          console.log('insertmanyhomes err, ', err);
+        }));
+      }
+    });
   });
 };

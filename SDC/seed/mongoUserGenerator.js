@@ -2,7 +2,7 @@ const faker = require('faker');
 
 const generateOneUser = (user_id) => {
   return {
-    user_id: user_id,
+    _id: user_id,
     username: faker.name.findName(),
     rating: `${Number.parseFloat(Math.random() * 5).toPrecision(2)}`
   };
