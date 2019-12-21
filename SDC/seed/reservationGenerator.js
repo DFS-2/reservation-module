@@ -5,8 +5,8 @@ Output: bulkReservations (array) */
 
 const moment = require('moment');
 
-const reservationGenerator = (loftId) => {
-  const numReservations = Math.floor(Math.random() * 10) + 1;
+module.exports = (home_id, user_id) => {
+  const numReservations = Math.floor(Math.random() * 3) + 1;
   let numDays = numReservations * 2;
   const reservationDates = [];
   let lastDay = 0;
@@ -18,26 +18,33 @@ const reservationGenerator = (loftId) => {
 
   const reservations = [];
   for (let j = 0; j < reservationDates.length; j += 2) {
-    const reservation = {};
-    reservation.home_id = loftId;
-    reservation.startDate = moment().add(reservationDates[j], 'days').format('YYYY[-]MM[-]DD');
-    reservation.endDate = moment().add(reservationDates[j + 1], 'days').format('YYYY[-]MM[-]DD');
+    const reservation = [
+      moment().add(reservationDates[j], 'days').format('YYYY[-]MM[-]DD'),
+      moment().add(reservationDates[j + 1], 'days').format('YYYY[-]MM[-]DD'),
+      home_id,
+      Math.floor(Math.random() * 5),
+      Math.floor(Math.random() * 5),
+      Math.floor(Math.random() * 5),
+      user_id,
+      `${Number.parseFloat(Math.random() * 200).toPrecision(2)}`,
+      `${Number.parseFloat(Math.random() * 400).toPrecision(2)}`,
+    ];
     reservations.push(reservation);
   }
   return reservations;
 };
 
-module.exports = function * (batchSize, totalSize) {
-  if (totalSize % batchSize !== 0) {
-    throw new Error('total size needs to be divisible by batch size');
-  }
-  const batchBin = [];
-  for (let i = 1; i <= totalSize; i++) {
-    // construct object to be pushed here
-    batchBin.push(reservationGenerator(i));
-    if (i % batchSize === 0) {
-      yield batchBin;
-      batchBin = [];
-    }
-  }
-};
+// module.exports = function * (batchSize, totalSize, home_id, user_id) {
+//   if (totalSize % batchSize !== 0) {
+//     throw new Error('total size needs to be divisible by batch size');
+//   }
+//   const batchBin = [];
+//   for (let i = 1; i <= totalSize; i++) {
+//     // construct object to be pushed here
+//     batchBin.push(reservationGenerator(home_id, user_id));
+//     if (i % batchSize === 0) {
+//       yield batchBin;
+//       batchBin = [];
+//     }
+//   }
+// };

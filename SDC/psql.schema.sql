@@ -17,7 +17,6 @@ CREATE TABLE homes (
 );
 
 CREATE TABLE reservations (
-  res_id               SERIAL PRIMARY KEY,
   start_date           DATE,
   end_date             DATE,
   home_id              INTEGER,

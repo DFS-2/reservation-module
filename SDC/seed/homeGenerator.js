@@ -2,7 +2,7 @@ const faker = require('faker');
 
 const loftSynonyms = ['apartment', 'hostel', 'hotel', 'inn', 'lodge', 'motel', 'resort', 'shelter', 'abode', 'castle', 'palace', 'room', 'lodging', 'penthouse', 'studio', 'house', 'mansion'];
 
-const generateOneHome = (home_id, user_id) => {
+module.exports = (home_id, user_id) => {
   return [
     home_id,
     `${faker.commerce.productAdjective()} ${loftSynonyms[Math.floor(Math.random() * loftSynonyms.length)]} ${faker.address.city()}`,
@@ -15,13 +15,13 @@ const generateOneHome = (home_id, user_id) => {
   ];
 };
 
-module.exports = function * (batchSize, totalSize, user_id) {
-  const batchBin = [];
-  for (let i = 1; i <= totalSize; i++) {
-    batchBin.push(generateOneHome(i, user_id));
-    if (i % batchSize === 0) {
-      yield batchBin;
-      batchBin = [];
-    }
-  }
-};
+// module.exports = function * (batchSize, totalSize, user_id) {
+//   const batchBin = [];
+//   for (let i = 1; i <= totalSize; i++) {
+//     batchBin.push(generateOneHome(i, user_id));
+//     if (i % batchSize === 0) {
+//       yield batchBin;
+//       batchBin = [];
+//     }
+//   }
+// };

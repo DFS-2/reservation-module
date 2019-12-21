@@ -9,7 +9,7 @@ const generateOneUser = (user_id) => {
 };
 
 module.exports = function * (batchSize, totalSize) {
-  const batchBin = [];
+  let batchBin = [];
   for (let i = 1; i <= totalSize; i++) {
     batchBin.push(generateOneUser(i));
     if (i % batchSize === 0) {
