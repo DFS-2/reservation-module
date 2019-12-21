@@ -104,49 +104,6 @@ const pool = new Pool({
     port: 5432
   });
 Promise.promisifyAll(pool, {multiArgs: true});
-module.exports.createComboUserandHome = (entry, curUserCount) => {
-  const {userInfo, homeInfo, resInfo} = entry;
-  const userParams = [];
-  const homeParams = [];
-
-  for (let item in userInfo) {
-    userParams.push(userInfo[item]);
-  }
-  for (let item in homeInfo) {
-    homeParams.push(homeInfo[item]);
-  }
-  
-  const resParams = resInfo; // this is an array of reservation objects
-
-  return pool.queryAsync(userQuery, userParams)
-    .then(() => {
-      console.log('user entry entered');
-      return pool.queryAsync(homeQuery, homeParams);
-    }).then(() => {
-      console.log('home entry entered');
-      return resParams.reduce((accumulator, resParam, index) => {
-        return accumulator.then(() => {
-          const input = [
-            resParam.startDate,
-            resParam.endDate,
-            resParam.home_id,
-            Math.floor(Math.random() * 5),
-            Math.floor(Math.random() * 5),
-            Math.floor(Math.random() * 5),
-            Math.floor(Math.random() * curUserCount),
-            `${Number.parseFloat(Math.random() * 100).toPrecision(2)}`,
-            `${Number.parseFloat(Math.random() * 100).toPrecision(2)}`,
-          ]
-        });
-      }, Promise.resolve([]));
-      return pool.queryAsync(resQuery, resParams);
-    }).then(() => {
-      console.log('reservation entry entered');
-      console.log('entry created');
-    }).catch((err) => {
-      console.log('error encountered while creating entry... ', err);
-    });
-};
 
 // expects an array of user array as input
 module.exports.createUsers = (userLists) => {

@@ -87,13 +87,31 @@ const homeCollectionSchema = {
 MongoClient.connect(url, (err, client) => {
   if (err) { throw err } 
   const db = client.db(dbName);
-  db.createCollection(userCollection, userCollectionSchema, (err, res) => {
+  db.createCollection(userCollection, (err, res) => {
     if (err) { throw err }
     console.log(`collection ${userCollection} created!`);
-    db.createCollection(homeCollection, homeCollectionSchema, (err, res) => {
+    db.createCollection(homeCollection, (err, res) => {
       if (err) { throw err }
       console.log(`collection ${homeCollection} created!`);
       process.exit(0);
     });
   });
 });
+
+module.exports.insertManyUsers = (arrayOfCollections, callback) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) { throw err }
+    const db = client.db(dbName);
+    const collection = db.collection('user');
+    collection.insertMany(arrayOfCollections, callback);
+  });
+};
+
+module.exports.insertManyHomes = (arrayOfCollections, callback) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) { throw err }
+    const db = client.db(dbName);
+    const collection = db.collection('home');
+    collection.insertMany(arrayOfCollections, callback);
+  });
+};
