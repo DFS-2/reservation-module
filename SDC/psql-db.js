@@ -105,11 +105,11 @@ const pool = new Pool({
   });
 Promise.promisifyAll(pool, {multiArgs: true});
 
+module.exports.pool = pool;
 // expects an array of user array as input
 module.exports.createUsers = (userLists) => {
   return userLists.reduce((accumulator, user, index) => {
     return accumulator.then(() => {
-      // console.log('chicken');
       return pool.queryAsync(userQuery, user);
     });
   }, Promise.resolve());

@@ -65,3 +65,8 @@ typings/
 keys/
 
 /docker-compose.yml
+
+# csv for seeding
+/SDC/seed/bin1.csv
+/SDC/seed/bin2.csv
+/SDC/seed/bin3.csv
