@@ -13,17 +13,17 @@ module.exports = (home_id, user_id) => {
 
   const reservations = [];
   for (let j = 0; j < reservationDates.length; j += 2) {
-    const reservation = [
-      moment().add(reservationDates[j], 'days').format('YYYY[-]MM[-]DD'),
-      moment().add(reservationDates[j + 1], 'days').format('YYYY[-]MM[-]DD'),
-      home_id,
-      Math.floor(Math.random() * 5),
-      Math.floor(Math.random() * 5),
-      Math.floor(Math.random() * 5),
-      user_id,
-      `${Number.parseFloat(Math.random() * 200).toPrecision(2)}`,
-      `${Number.parseFloat(Math.random() * 400).toPrecision(2)}`,
-    ];
+    const reservation = {
+      startdate: moment().add(reservationDates[j], 'days').format('YYYY[-]MM[-]DD'),
+      enddate: moment().add(reservationDates[j + 1], 'days').format('YYYY[-]MM[-]DD'),
+      home_id: home_id,
+      adultcount: Math.floor(Math.random() * 5),
+      childrencount: Math.floor(Math.random() * 5),
+      infantcount: Math.floor(Math.random() * 5),
+      user_id: user_id,
+      amountpaid: `${Number.parseFloat(Math.random() * 200).toPrecision(2)}`,
+      amountowed: `${Number.parseFloat(Math.random() * 400).toPrecision(2)}`,
+    };
     reservations.push(reservation);
   }
   return reservations;

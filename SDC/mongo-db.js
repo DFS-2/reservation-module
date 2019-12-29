@@ -2,12 +2,8 @@ const MongoDB = require('mongodb');
 const MongoClient = MongoDB.MongoClient;
 const url = 'mongodb://localhost:27017';
 const dbName = 'reservations';
-const homeCollection = 'home';
-const userCollection = 'user';
-const userBatchSize = 1500;
-const userTotalSize = 15000000;
-const homeBatchSize = 1000;
-const homeTotalSize = 10000000;
+const client = new MongoClient(url, {useUnifiedTopology: false});
+const connection = client.connect();
 
 const userCollectionSchema = {
   validator: { $jsonSchema: {
@@ -103,7 +99,7 @@ const homeCollectionSchema = {
 
 module.exports.insertManyUsers = (arrayOfCollections) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(url, (err, client) => {
+    MongoClient.connect(url, {useUnifiedTopology: false}, (err, client) => {
       if (err) { 
         reject(err);
       } else {
@@ -119,9 +115,10 @@ module.exports.insertManyUsers = (arrayOfCollections) => {
   });
 };
 
+
 module.exports.insertManyHomes = (arrayOfCollections) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(url, (err, client) => {
+    MongoClient.connect(url, {useUnifiedTopology: false}, (err, client) => {
       if (err) { 
         reject(err);
       } else {
@@ -134,5 +131,80 @@ module.exports.insertManyHomes = (arrayOfCollections) => {
         }));
       }
     });
+  });
+};
+
+// module.exports.createIndex = (collectionName) => {
+//   return new Promise((resolve, reject) => {
+//     MongoClient.connect(url, {useUnifiedTopology: false}, (err, client) => {
+      
+//     });
+//   })
+// };
+
+// ======================= READ =======================
+module.exports.getTenHomes = (totalHomeNumber) => {
+  return new Promise((resolve, reject) => {
+    connection.then(() => {
+      const db = client.db(dbName);
+      const collection = db.collection('home');
+      const startPoint = Math.floor(Math.random() * totalHomeNumber - 10);
+      resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
+        return result;
+      }).catch((err) => {
+        console.log('error while retrieving 10 random homes... ', err);
+      }));
+    })
+  });
+};
+
+module.exports.getTenUsers = (totalUserNumber) => {
+  return new Promise((resolve, reject) => {
+    const db = client.db(dbName);
+    const collection = db.collection('user');
+    const startPoint = Math.floor(Math.random() * totalUserNumber - 10);
+    resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
+      return result;
+    }).catch(() => {
+      console.log('error while retrieving 10 random users... ', err);
+    }));
+  });
+};
+
+module.exports.getOneHome = (home_id) => {
+  return new Promise((resolve, reject) => {
+    const db = client.db(dbName);
+    const collection = db.collection('home');
+    resolve(collection.findOne({_id: home_id})
+      .catch((err) => {
+        console.log('error while retrieving one single home... ', err);
+      }));
+  });
+};
+
+module.exports.getOneUser = (user_id) => {
+  return new Promise((resolve, reject) => {
+    const db = client.db(dbName);
+    const collection = db.collection('user');
+    resolve(collection.findOne({_id: user_id})
+      .catch((err) => {
+        console.log('error while retrieving one single home... ', err);
+      }));
+  });
+};
+
+// ======================= WRITE =======================
+module.exports.addOneReservation = (reservationObj) => {
+  return new Promise((resolve, reject) => {
+    const db = client.db(dbName);
+    const collection = db.collection('home');
+    resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, (entry) => {
+      debugger;
+    }).then((entry) => {
+        debugger;
+        if (entry === undefined) {
+
+        }
+      }));
   });
 };

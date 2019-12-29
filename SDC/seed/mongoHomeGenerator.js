@@ -4,9 +4,10 @@ const loftSynonyms = ['apartment', 'hostel', 'hotel', 'inn', 'lodge', 'motel', '
 
 
 
-const generateOneUser = (home_id) => {
+const generateOneHome = (home_id, totalUserNumber) => {
   return {
     _id: home_id,
+    user_id: Math.floor(Math.random() * totalUserNumber),
     title: `${faker.commerce.productAdjective()} ${loftSynonyms[Math.floor(Math.random() * loftSynonyms.length)]} ${faker.address.city()}`,
     priceperadult: `$${Math.floor(Math.random() * 400)}`,
     priceperchild: `$${Math.floor(Math.random() * 400)}`,
@@ -17,10 +18,10 @@ const generateOneUser = (home_id) => {
   };
 };
 
-module.exports = function * (batchSize, totalSize) {
+module.exports = function * (batchSize, totalSize, totalUserNumber) {
   let batchBin = [];
   for (let i = 1; i <= totalSize; i++) {
-    batchBin.push(generateOneUser(i));
+    batchBin.push(generateOneHome(i, totalUserNumber));
     if (i % batchSize === 0) {
       yield batchBin;
       batchBin = [];
