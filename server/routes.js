@@ -20,8 +20,19 @@ routes.post('/api/reservations/:hostId', (req, res) => {
 
 // ================== mongo ==================
 routes.get('/api/reservations/mongo/tenrandomlofts', (req, res) => {
-  // controller.mongoGetTenLofts(req, res);
+  // controller.mongoGetTenLofts(req, res, true);
   controller.mongoAddOneReservation(req, res);
 });
+
+routes.get('/api/reservations/mongo/tenrandomlofts-test', (req, res) => {
+  controller.mongoAddOneReservation(req, res, true);
+});
+
+routes.get('/api/reservations/mongo/oneloft/:id', (req, res) => {
+  debugger;
+  controller.mongoGetOneLoft(req, res);
+});
+
+routes.get('/')
 
 module.exports = routes;

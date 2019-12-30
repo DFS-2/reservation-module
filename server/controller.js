@@ -42,8 +42,8 @@ module.exports.addOneReservation = (req, res) => {
 };
 
 // ===================Mongo===================
-module.exports.mongoGetTenLofts = (req, res) => {
-  mongoDB.getTenHomes(10000000).then((result) => {
+module.exports.mongoGetTenLofts = (req, res, testMode = false) => {
+  mongoDB.getTenHomes(10000000, testMode).then((result) => {
     res.status(200).send(result);
   }).catch((err) => {
     console.log('error retrieving info from get ten lofts... ', err);
@@ -51,8 +51,8 @@ module.exports.mongoGetTenLofts = (req, res) => {
   });
 };
 
-module.exports.mongoGetTenUsers = (req, res) => {
-  mongoDB.getTenUsers(15000000).then((result) => {
+module.exports.mongoGetTenUsers = (req, res, testMode = false) => {
+  mongoDB.getTenUsers(15000000, testMode).then((result) => {
     res.status(200).send(result);
   }).catch((err) => {
     console.log('error retrieving info from get ten lofts... ', err);
@@ -60,43 +60,52 @@ module.exports.mongoGetTenUsers = (req, res) => {
   });
 };
 
-module.exports.mongoGetOneLoft = (req, res) => {
-
+module.exports.mongoGetOneLoft = (req, res, testMode = false) => {
+  const home_id = req.body.home_id;
+  mongoDB.getOneHome(home_id, testMode).then((result) => {
+    res.status(200).send(result);
+  }).catch((err) => {
+    console.log('error retrieving info from get one loft... ', err);
+    res.status(404).end();
+  });
 };
 
-module.exports.mongoAddOneReservation = (req, res) => {
-  let testObj = {
-    home_id: 1,
-    startDate: 'test-date',
-  };
-  debugger;
-  mongoDB.addOneReservation(testObj)
+// this probably needs changing to allow for detection of invalid reservations
+module.exports.mongoAddOneReservation = (req, res, testMode = false) => {
+  const reservation = req.body.reservation;
+  mongoDB.addOneReservation(reservation).then((result) => {
+    res.status(200).send('reservation has been added');
+  }).catch((err) => {
+    console.log('error encountered making reservation... ', err);
+    res.status(404).end();
+  });
 };
 
-module.exports.mongoReviseReservation = (req, res) => {
+module.exports.mongoReviseReservation = (req, res, testMode = false) => {
 // this might be a good place to use compound index and sort the reservation id
 // you would also have to add id to each individual reservations
 // maybe we don't have to make unique id but just index the start date 
 // since for the same house you cannot have 2 reservation on the same date
 };
 
-module.exports.mongoDeleteOneReservation = (req, res) => {
-
+module.exports.mongoDeleteOneReservation = (req, res, testMode = false) => {
+  const reservation = req.body.reservation;
+  // mongoDB.
 };
 
 // ===================Psql===================
-module.exports.psqlGetTenLofts = (req, res) => {
+module.exports.psqlGetTenLofts = (req, res, testMode = false) => {
 
 };
 
-module.exports.psqlGetOneLoft = (req, res) => {
+module.exports.psqlGetOneLoft = (req, res, testMode = false) => {
 
 };
 
-module.exports.psqlAddOneReservation = (req, res) => {
+module.exports.psqlAddOneReservation = (req, res, testMode = false) => {
 
 };
 
-module.exports.psqlDeleteOneReservation = (req, res) => {
+module.exports.psqlDeleteOneReservation = (req, res, testMode = false) => {
 
 };

@@ -143,68 +143,94 @@ module.exports.insertManyHomes = (arrayOfCollections) => {
 // };
 
 // ======================= READ =======================
-module.exports.getTenHomes = (totalHomeNumber) => {
+module.exports.getTenHomes = (totalHomeNumber, testMode) => {
   return new Promise((resolve, reject) => {
     connection.then(() => {
       const db = client.db(dbName);
       const collection = db.collection('home');
       const startPoint = Math.floor(Math.random() * totalHomeNumber - 10);
-      resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
-        return result;
-      }).catch((err) => {
-        console.log('error while retrieving 10 random homes... ', err);
-      }));
-    })
+      if (!testMode) {
+        resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
+          return result;
+        }).catch((err) => {
+          console.log('error while retrieving 10 random homes... ', err);
+        }));
+      } else {
+        resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).explain("executionStats"));
+      }
+    });
   });
 };
 
-module.exports.getTenUsers = (totalUserNumber) => {
+module.exports.getTenUsers = (totalUserNumber, testMode) => {
   return new Promise((resolve, reject) => {
     const db = client.db(dbName);
     const collection = db.collection('user');
     const startPoint = Math.floor(Math.random() * totalUserNumber - 10);
-    resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
-      return result;
-    }).catch(() => {
-      console.log('error while retrieving 10 random users... ', err);
-    }));
+    if (!testMode) {
+      resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().then((result) => {
+        return result;
+      }).catch(() => {
+        console.log('error while retrieving 10 random users... ', err);
+      }));
+    } else {
+      resolve(collection.find({_id: {$gt: startPoint - 1, $lt: startPoint + 10}}).toArray().explain("executionStats"));
+    }
   });
 };
 
-module.exports.getOneHome = (home_id) => {
+module.exports.getOneHome = (home_id, testMode) => {
   return new Promise((resolve, reject) => {
     const db = client.db(dbName);
     const collection = db.collection('home');
-    resolve(collection.findOne({_id: home_id})
-      .catch((err) => {
-        console.log('error while retrieving one single home... ', err);
-      }));
+    if (!testMode) {
+      resolve(collection.findOne({_id: home_id})
+        .catch((err) => {
+          console.log('error while retrieving one single home... ', err);
+        }));
+    } else {
+      resolve(collection.findOne({_id: home_id}).explain("executionStats"));
+    }
   });
 };
 
-module.exports.getOneUser = (user_id) => {
+module.exports.getOneUser = (user_id, testMode) => {
   return new Promise((resolve, reject) => {
     const db = client.db(dbName);
     const collection = db.collection('user');
-    resolve(collection.findOne({_id: user_id})
-      .catch((err) => {
-        console.log('error while retrieving one single home... ', err);
-      }));
+    if (!testMode) {
+      resolve(collection.findOne({_id: user_id})
+        .catch((err) => {
+          console.log('error while retrieving one single home... ', err);
+        }));
+    } else {
+      resolve(collection.findOne({_id: user_id}).explain("executionStats"));
+    }
   });
 };
 
 // ======================= WRITE =======================
-module.exports.addOneReservation = (reservationObj) => {
+module.exports.addOneReservation = (reservationObj, testMode) => {
   return new Promise((resolve, reject) => {
     const db = client.db(dbName);
     const collection = db.collection('home');
-    resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, (entry) => {
-      debugger;
-    }).then((entry) => {
-        debugger;
-        if (entry === undefined) {
-
-        }
-      }));
+    if (!testMode) {
+      resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, {$push: {reservations: reservationObj}}));
+    } else {
+      resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, {$push: {reservations: reservationObj}}).explain("executionStats"));
+    }
   });
 };
+
+module.exports.deleteOneReservation = (reservationObj, testMode) => {
+  return new Promise((resolve, reject) => {
+    const db = client.db(dbName);
+    const collection = db.collection('home');
+    if (!testMode) {
+      resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, {$pull: {reservations: {$elemMatch: {startdate: reservationObj.startdate}}}}));
+    }
+  });
+}
+
+
+
