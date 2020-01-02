@@ -228,6 +228,8 @@ module.exports.deleteOneReservation = (reservationObj, testMode) => {
     const collection = db.collection('home');
     if (!testMode) {
       resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, {$pull: {reservations: {$elemMatch: {startdate: reservationObj.startdate}}}}));
+    } else {
+      resolve(collection.findOneAndUpdate({_id: reservationObj.home_id}, {$pull: {reservations: {$elemMatch: {startdate: reservationObj.startdate}}}})).explain("executionStats");
     }
   });
 }

@@ -29,10 +29,23 @@ routes.get('/api/reservations/mongo/tenrandomlofts-test', (req, res) => {
 });
 
 routes.get('/api/reservations/mongo/oneloft/:id', (req, res) => {
-  debugger;
   controller.mongoGetOneLoft(req, res);
 });
 
-routes.get('/')
+// ================== psql ==================
+// ================== CREATE ==================
 
+// ================== READ ==================
+routes.get('/api/reservations/psql/tenrandomhomes', (req, res) => {
+  // controller.psqlGetTenHomes(req, res);
+  controller.psqlAddOneReservation(req, res);
+});
+
+routes.get('/api/reservations/psql/onehome/:id', (req, res) => {
+  controller.psqlGetOneHome(req, res);
+});
+
+// ================== UPDATE ==================
+
+// ================== DELETE ==================
 module.exports = routes;
