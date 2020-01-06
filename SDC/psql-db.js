@@ -1,13 +1,13 @@
 const { Pool, Client } = require('pg');
+const credentials = require('./credentials');
 const Promise = require('bluebird');
 const entrydbName = 'postgres';
-const dbName = 'reservations';
-const host = 'localhost';
 const client = new Client({
-  user: 'felixding',
-  host: host,
+  user: credentials.username,
+  password: credentials.password,
+  host: credentials.host,
   database: entrydbName,
-  port: 5432
+  port: credentials.port,
 });
 
 // =========== database initialization ===========
@@ -23,7 +23,7 @@ module.exports.init = () => (
     console.log('switching to newly created data base');
     client.end();
     const pool = new Pool({
-      user: 'felixding',
+      user: username,
       host: host,
       database: dbName,
       port: 5432
@@ -98,10 +98,11 @@ const resQuery = `INSERT INTO reservations (
 //   start_date, end_date, home_id, adultcount, childrencount, infantcount, user_id, amountpaid, amountowed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
 
 const pool = new Pool({
-    user: 'felixding',
-    host: host,
-    database: dbName,
-    port: 5432
+    user: credentials.username,
+    password: credentials.password,
+    host: credentials.host,
+    database: credentials.dbName,
+    port: credentials.port,
   });
 Promise.promisifyAll(pool, {multiArgs: true});
 // expects an array of user array as input
@@ -173,7 +174,6 @@ module.exports.addOneReservation = (reservationObj) => {
     argVector.push(key);
   }
   let query = `INSERT INTO reservations (${argVector.join(',')}) VALUES (${paramVector.join(',')})`;
-  debugger;
   return pool.connect()
     .then((client) => {
       return client.query(query).then((result) => {

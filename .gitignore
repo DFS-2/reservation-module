@@ -67,6 +67,17 @@ keys/
 /docker-compose.yml
 
 # csv for seeding
+/csv
 /SDC/seed/bin1.csv
 /SDC/seed/bin2.csv
 /SDC/seed/bin3.csv
+
+# new relics
+/newrelic.js
+/stress_report.json
+
+# ec2 instance database credentials
+/SDC/credentials.js
+
+# loader io credentials
+/loaderio

@@ -1,6 +1,4 @@
-FROM node:10.17.0-alpine
-
-ENV NODE_ENV='production'
+FROM node:10.15-alpine
 
 RUN mkdir -p /src/app
 
@@ -10,8 +8,6 @@ COPY . /src/app
 
 RUN npm install
 
-EXPOSE 3001
+EXPOSE 8080
 
-RUN apk update && apk add bash
-
-ENTRYPOINT bash -c "./wait-for-it.sh database:3306 && npm run db:setup && npm start"
+CMD ["npm", "run", "server"]

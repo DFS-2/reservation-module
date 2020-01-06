@@ -10,7 +10,7 @@
     "dbtest": "node ./SDC/db.js",
     "sdcdbseed": "node --max-old-space-size=2048 SDC/seed/seed.js",
     "start": "node server/router.js",
-    "server": "nodemon --inspect server/router.js",
+    "server": "node server/router.js",
     "server:inspect": "nodemon --inspect server/router.js",
     "pretest": "eslint .",
     "build:production": "webpack --mode=production"
@@ -64,6 +64,7 @@
     "moment": "^2.24.0",
     "mongodb": "^3.4.0",
     "mysql2": "^2.0.1",
+    "newrelic": "^6.2.0",
     "nodemon": "^2.0.1",
     "path": "^0.12.7",
     "react": "^16.12.0",

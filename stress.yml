@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:3001"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+      rampTo: 300
+    - duration: 60
+      arrivalRate: 500
+scenarios:
+  - name: "get ten random homes"
+    flow: 
+      - get:
+          url: "/api/reservations/psql/tenrandomhomes"
+  - name: "add a reservation"
+    flow:
+      - post:
+          url: "/api/reservations/psql/addoneres"
+          json: 
+            reservationObj: {start_date: $$2020-01-01$$,end_date: $$2020-01-02$$,home_id: 1,adultcount: 1000,childrencount: 1000,user_id: 15000004,amountpaid: $$$20$$,amountowed: $$$20$$}
+      
+    

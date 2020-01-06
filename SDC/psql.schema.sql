@@ -1,6 +1,7 @@
+CREATE database IF NOT EXISTS reservations;
 CREATE TABLE users (
   user_id              SERIAL PRIMARY KEY,
-  username             VARCHAR(20) NOT NULL,
+  username             VARCHAR(100) NOT NULL,
   rating               VARCHAR(20) NOT NULL
 ); 
 
@@ -13,7 +14,7 @@ CREATE TABLE homes (
   rating               VARCHAR(20) NOT NULL,
   ratingcount          VARCHAR(20) NOT NULL,
   host_id              INTEGER NOT NULL,
-  FOREIGN KEY (host_id) REFERENCES users (user_id)
+  -- FOREIGN KEY (host_id) REFERENCES users (user_id)
 );
 
 CREATE TABLE reservations (
@@ -26,10 +27,8 @@ CREATE TABLE reservations (
   user_id              INTEGER,
   amountpaid           VARCHAR(10) NOT NULL,
   amountowed           VARCHAR(10) NOT NULL,
-  FOREIGN KEY (home_id) REFERENCES homes (home_id),
-  FOREIGN KEY (user_id) REFERENCES users (user_id)
+  -- FOREIGN KEY (home_id) REFERENCES homes (home_id)
 );
-
 
 -- base price multiplier ?
 -- review table ?

@@ -1,3 +1,4 @@
+// require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -7,29 +8,16 @@ const compression = require('compression');
 const routes = require('./routes');
 
 const app = express();
-const port = 3001;
+const port = 8080;
 
 app.use(compression());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use('/loaderio-41a33d19db0620e000e51f4bb01c562d.txt', express.static(path.join(__dirname, '../loaderio/loaderio-41a33d19db0620e000e51f4bb01c562d.txt')));
 app.use('/', express.static(path.join(__dirname, '../public')));
-// app.use('/bundle.js',express.static(path.join(__dirname, '../public/bundle.js')));
-// app.use('/:hostId', express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes);
-
-// app.get('/api/reservations/allLofts', (req, res) => {
-//   // controller.getAllLofts(req, res);
-// });
-
-// app.get('/api/reservations/:hostId', (req, res) => {
-//   // controller.getOneLoft(req, res);
-// });
-
-// app.post('/api/reservations/:hostId', (req, res) => {
-//   // controller.addOneReservation(req, res);
-// });
 
 app.listen(port, () => console.log(`Lemon Loft reservation server listening on port ${port}!`));

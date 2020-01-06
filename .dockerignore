@@ -1,2 +1,14 @@
 node_modules/
 keys/
+
+# csv and other seeding related files
+SDC/__tests__
+SDC/seed/bin1.csv
+SDC/seed/bin2.csv
+SDC/seed/bin3.csv
+csv/
+.circleci/
+tests/
+
+# old docker config
+Dockerfile.old

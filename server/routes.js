@@ -20,8 +20,8 @@ routes.post('/api/reservations/:hostId', (req, res) => {
 
 // ================== mongo ==================
 routes.get('/api/reservations/mongo/tenrandomlofts', (req, res) => {
-  // controller.mongoGetTenLofts(req, res, true);
-  controller.mongoAddOneReservation(req, res);
+  controller.mongoGetTenLofts(req, res, true);
+  // controller.mongoAddOneReservation(req, res);
 });
 
 routes.get('/api/reservations/mongo/tenrandomlofts-test', (req, res) => {
@@ -34,11 +34,14 @@ routes.get('/api/reservations/mongo/oneloft/:id', (req, res) => {
 
 // ================== psql ==================
 // ================== CREATE ==================
+routes.post('/api/reservations/psql/addoneres', (req, res) => {
+  controller.psqlAddOneReservation(req, res);
+});
 
 // ================== READ ==================
 routes.get('/api/reservations/psql/tenrandomhomes', (req, res) => {
-  // controller.psqlGetTenHomes(req, res);
-  controller.psqlAddOneReservation(req, res);
+  controller.psqlGetTenHomes(req, res);
+  // controller.psqlAddOneReservation(req, res);
 });
 
 routes.get('/api/reservations/psql/onehome/:id', (req, res) => {
