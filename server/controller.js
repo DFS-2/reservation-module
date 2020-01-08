@@ -1,4 +1,4 @@
-const db = require('./db.js');
+// const db = require('./db.js');
 // const mongoDB = require('../SDC/mongo-db');
 const psqlDB = require('../SDC/psql-db');
 const moment = require('moment');
@@ -103,7 +103,6 @@ module.exports.mongoDeleteOneReservation = (req, res, testMode = false) => {
 module.exports.psqlGetTenHomes = (req, res, testMode = false) => {
   psqlDB.getTenHomes(10000000, testMode).then((result) => {
     // expected return type: array
-    console.log(result);
     res.status(200).send(result);
   }).catch((err) => {
     console.log('psql error while retrieving 10 homes... ', err);
@@ -124,19 +123,7 @@ module.exports.psqlGetOneHome = (req, res, testMode = false) => {
 
 module.exports.psqlAddOneReservation = (req, res, testMode = false) => {
   // to be called by a post request
-  const reservationObj = req.body.reservationObj;
-  // console.log(reservationObj);
-  // const reservationObj = {
-  //   start_date: `'${moment().add(2, 'days').format('YYYY[-]MM[-]DD')}'`,
-  //   end_date: `'${moment().add(4, 'days').format('YYYY[-]MM[-]DD')}'`,
-  //   home_id: 1,
-  //   adultcount: 1000,
-  //   childrencount: 1000,
-  //   infantcount: 10000,
-  //   user_id: 15000004,
-  //   amountpaid: '20',
-  //   amountowed: '20'
-  // };
+  const reservationObj = req.body;
   psqlDB.addOneReservation(reservationObj).then((result) => {
     res.status(200).send('reservation added');
   }).catch((err) => {

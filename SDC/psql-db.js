@@ -151,15 +151,12 @@ module.exports.addOneHome = (homeObj) => {
     argVector.push(key);
   }
   let query = `INSERT INTO homes (${argVector.join(',')}) VALUES (${paramVector.join(',')})`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        client.release();
-        console.log('query for adding one home fulfilled');
-      });
-    }).catch((err) => {
-      console.log('error encountered while adding one home... ', err);
-    });
+  
+  return pool.query(query).then((result) => {
+    console.log('query for adding one home fulfilled');
+  }).catch((err) => {
+    console.log('error encountered while adding one home... ', err);
+  });
 };
 
 module.exports.addOneReservation = (reservationObj) => {
@@ -174,15 +171,12 @@ module.exports.addOneReservation = (reservationObj) => {
     argVector.push(key);
   }
   let query = `INSERT INTO reservations (${argVector.join(',')}) VALUES (${paramVector.join(',')})`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        client.release();
-        console.log('query for adding one reservation fulfilled');
-      });
-    }).catch((err) => {
-      console.log('error encountered while adding one reservation... ', err);
-    });
+  
+  return pool.query(query).then((result) => {
+    console.log('query for adding one reservation fulfilled');
+  }).catch((err) => {
+    console.log('error encountered while adding one reservation... ', err);
+  });
 };
 
 module.exports.addOneUser = (userObj) => {
@@ -193,42 +187,32 @@ module.exports.addOneUser = (userObj) => {
     paramVector.push(userObj[key]);
   }
   let query = `INSERT INTO users (${argVector.join(',')} VALUES (${paramVector.join(',')}))`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        client.release();
-        console.log('query for adding one user fulfilled');
-      });
-    }).catch((err) => {
-      console.log('error encountered while adding one user');
-    });
+
+  return pool.query(query).then((result) => {
+    console.log('query for adding one user fulfilled');
+  }).catch((err) => {
+    console.log('error encountered while adding one user');
+  });
 };
 
 // ====================== Read ======================
 module.exports.getTenHomes = (totalHomeNumber, testMode) => {
-  return pool.connect()
-    .then((client) => {
-      const startPoint = Math.floor(Math.random() * totalHomeNumber - 10);
-      return client.query(`SELECT * from homes WHERE home_id >= ${startPoint} and home_id < ${startPoint + 10}`)
-        .then((result) => {
-          client.release();
-          console.log('query for ten random homes fulfilled');
-          return result.rows;
-        });
+  const startPoint = Math.floor(Math.random() * totalHomeNumber - 10);
+  debugger;
+  return pool.query(`SELECT * from homes WHERE home_id >= ${startPoint} and home_id < ${startPoint + 10}`)
+    .then((result) => {
+      console.log('query for ten random homes fulfilled');
+      return result.rows;
     }).catch((err) => {
       console.log('psql error enountered while retrieving ten homes... ', err);
     });
 };
 
 module.exports.getOneHome = (home_id, testMode) => {
-  return pool.connect()
-    .then((client) => {
-      return client.query(`SELECT * FROM homes WHERE home_id = ${home_id}`)
-        .then((result) => {
-          client.release();
-          console.log('query for one home fulfilled');
-          return result.rows;
-        });
+  return pool.query(`SELECT * FROM homes WHERE home_id = ${home_id}`)
+    .then((result) => {
+      console.log('query for one home fulfilled');
+      return result.rows;
     }).catch((err) => {
       console.log('psql error encountered while retrieving one home... ', err);
     });
@@ -241,16 +225,14 @@ module.exports.updateOneReservation = (home_id, reservationDetail, testMode) => 
     query += `${key}=${reservationDetail[key]} `;
   }
   query += `WHERE home_id=${home_id} and start_date=${reservationDetail.start_date}`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        // need to fill more in here...
-        debugger;
-        client.release();
-      });
-    }).catch((err) => {
-      console.log('psql error encountered while updating one reservation... ', err)
-    });
+
+  return pool.query(query).then((result) => {
+    // need to fill more in here...
+    debugger;
+    client.release();
+  }).catch((err) => {
+    console.log('psql error encountered while updating one reservation... ', err)
+  });
 };
 
 module.exports.updateOneUser = (user_id, userObj) => {
@@ -259,16 +241,14 @@ module.exports.updateOneUser = (user_id, userObj) => {
     query += `${key}=${userObj[key]}`;
   }
   query += `WHERE user_id=${user_id}`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        // need to fill more in here...
-        debugger;
-        client.release();
-      });
-    }).catch((err) => {
-      console.log('psql error encountered while updating one user... ', err);
-    });
+
+  return pool.query(query).then((result) => {
+    // need to fill more in here...
+    debugger;
+    client.release();
+  }).catch((err) => {
+    console.log('psql error encountered while updating one user... ', err);
+  });
 };
 
 module.exports.updateOneHome = (home_id, homeObj) => {
@@ -277,45 +257,36 @@ module.exports.updateOneHome = (home_id, homeObj) => {
     query += `${key}=${homeObj[key]}`;
   }
   query += `WHERE home_id=${home_id}`;
-  return pool.conenct()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        // need to fill more in here...
-        debugger;
-        client.release();
-      });
-    }).catch((err) => {
-      console.log('psql error encountered while updating one home... ', err);
-    });
+
+  return pool.query(query).then((result) => {
+    // need to fill more in here...
+    debugger;
+  }).catch((err) => {
+    console.log('psql error encountered while updating one home... ', err);
+  });
 };
 
 // ====================== Delete ======================
 module.exports.deleteOneHome = (home_id) => {
   let query = `DELETE FROM homes WHERE home_id=${home_id}`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        // need to fill more in here...
-        debugger;
-        client.release();
-      });
-    }).catch((err) => {
-      console.log('psql error encountered while deleting one home...', err);
-    });
+
+  return pool.query(query).then((result) => {
+    // need to fill more in here...
+    debugger;
+  }).catch((err) => {
+    console.log('psql error encountered while deleting one home...', err);
+  });
 };
 
 module.exports.deleteOneReservation = (home_id, start_date) => {
   let query = `DELETE FROM reservations WHERE home_id=${home_id} and start_date=${start_date}`;
-  return pool.connect()
-    .then((client) => {
-      return client.query(query).then((result) => {
-        // need to fill more in here...
-        debugger;
-        client.release();
-      });
-    }).catch((err) => {
-      console.log('psql error encountered while deleting one reservation...', err);
-    });
+  return pool.query(query).then((result) => {
+    // need to fill more in here...
+    debugger;
+    client.release();
+  }).catch((err) => {
+    console.log('psql error encountered while deleting one reservation...', err);
+  });
 };
 
 // this would need some more logic to it. When a user is deleted, all the associated attributes (homes, reservations) should all be deleted.
