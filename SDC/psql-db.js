@@ -10,6 +10,8 @@ const client = new Client({
   port: credentials.port,
 });
 
+const redisClient = require('redis').createClient({host: '13.52.239.250', no_ready_check: true});
+Promise.promisifyAll(redisClient);
 // =========== database initialization ===========
 module.exports.init = () => (
   client.connect().then(() => {
@@ -198,24 +200,60 @@ module.exports.addOneUser = (userObj) => {
 // ====================== Read ======================
 module.exports.getTenHomes = (totalHomeNumber, testMode) => {
   const startPoint = Math.floor(Math.random() * totalHomeNumber - 10);
-  debugger;
-  return pool.query(`SELECT * from homes WHERE home_id >= ${startPoint} and home_id < ${startPoint + 10}`)
-    .then((result) => {
-      console.log('query for ten random homes fulfilled');
-      return result.rows;
-    }).catch((err) => {
-      console.log('psql error enountered while retrieving ten homes... ', err);
-    });
+  return redisClient.getAsync(`tenrandomhomes | ${startPoint}`).then((res) => {
+    if (res === null) {
+      console.log('cache missed, querying database...');
+      return pool.query(`SELECT * from homes WHERE home_id >= ${startPoint} and home_id < ${startPoint + 10}`)
+        .then((result) => {
+          console.log('query for ten random homes fulfilled');
+          console.log('updating cache...');
+          redisClient.setAsync(`tenrandomhomes | ${startPoint}`, JSON.stringify(result.rows));
+          return result.rows;
+        }).catch((err) => {
+          console.log('psql error enountered while retrieving ten homes... ', err);
+        });
+    } else {
+      return JSON.parse(res);
+    }
+  }).catch((err) => {
+    console.log('error retrieving from redis... ');
+  }).then((res) => {
+    return pool.query(`SELECT * from homes WHERE home_id >= ${startPoint} and home_id < ${startPoint + 10}`)
+      .then((result) => {
+        return result.rows;
+      }).catch((err) => {
+        console.log('psql error encountered while retrieving ten homes...', err);
+      });
+  });
 };
 
 module.exports.getOneHome = (home_id, testMode) => {
-  return pool.query(`SELECT * FROM homes WHERE home_id = ${home_id}`)
-    .then((result) => {
-      console.log('query for one home fulfilled');
-      return result.rows;
-    }).catch((err) => {
-      console.log('psql error encountered while retrieving one home... ', err);
-    });
+  return redisClient.getAsync(`onehome | ${home_id}`).then((res) => {
+    if (res === null) {
+      console.log('cache missed, querying database...');
+      return pool.query(`SELECT * FROM homes WHERE home_id = ${home_id}`)
+        .then((result) => {
+          console.log('query for one home fulfilled');
+          console.log('updating cache...');
+          redisClient.setAsync(`onehome | ${home_id}`, JSON.stringify(result.rows));
+          return result.rows;
+        }).catch((err) => {
+          console.log('psql error encountered while retrieving one home... ', err);
+        });
+    } else {
+      return JSON.parse(res);
+    }
+  }).catch((err) => {
+    console.log('error retrieving from redis... ');
+  }).then((res) => {
+    return pool.query(`SELECT * FROM homes WHERE home_id = ${home_id}`)
+      .then((result) => {
+        console.log('query for one home fulfilled');
+        return result.rows;
+      }).catch((err) => {
+        console.log('psql error encountered while retrieving one home... ', err);
+      });
+  });
 };
 
 // ====================== Update ======================

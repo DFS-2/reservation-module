@@ -1,7 +1,4 @@
-// const db = require('./db.js');
-// const mongoDB = require('../SDC/mongo-db');
 const psqlDB = require('../SDC/psql-db');
-const moment = require('moment');
 
 // ===================Sequelize===================
 module.exports.getAllLofts = (req, res) => {
